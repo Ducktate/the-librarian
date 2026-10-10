@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "mode": "template",
+  "company": "Your Company",
+  "owner": "unassigned",
+  "publication": "review-required",
+  "schedule": {
+    "status": "not-configured",
+    "scheduler": null,
+    "job_id": null,
+    "timezone": null,
+    "cadence": null,
+    "next_run": null
+  },
+  "runner": {
+    "command": [],
+    "timeout_seconds": 1800
+  }
+}

@@ -1,0 +1,6 @@
+# EXAMPLE ONLY. Replace absolute paths and choose the time with the operator.
+# This example runs at 09:00 in the cron host's effective time zone.
+# Verify the host zone, DST behavior and next run. Preserve existing crontab entries.
+# The configured runtime must support unattended bounded operation.
+0 9 * * * cd /absolute/private/company-brain && /absolute/python -m librarian routine >> /absolute/private/librarian-cron.log 2>&1
+# Remove only this identified job to disable it. Do not replace the whole crontab.

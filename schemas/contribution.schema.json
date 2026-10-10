@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ducktate/the-librarian/blob/main/schemas/contribution.schema.json",
+  "title": "contribution",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "event_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "implementation",
+        "deployment",
+        "decision",
+        "correction",
+        "incident",
+        "cost",
+        "proposal"
+      ]
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "author": {
+      "type": "object",
+      "properties": {
+        "agent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "session": {
+          "type": "string",
+          "minLength": 1
+        },
+        "machine": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "agent",
+        "session",
+        "machine"
+      ],
+      "additionalProperties": false
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "repository": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "commit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "issue": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pull_request": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "issue",
+        "pull_request"
+      ],
+      "additionalProperties": false
+    },
+    "affected_page_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]+$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "delivery_state": {
+            "type": "string",
+            "enum": [
+              "unknown",
+              "proposed",
+              "implemented",
+              "tested",
+              "merged",
+              "deployed",
+              "client_qualified"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "text",
+          "delivery_state",
+          "evidence"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "proposed_change": {
+      "type": "string",
+      "minLength": 1
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "cost_impact": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "decision_authority": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "supersedes_event_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "event_id",
+    "kind",
+    "observed_at",
+    "author",
+    "context",
+    "affected_page_ids",
+    "claims",
+    "sources",
+    "proposed_change",
+    "questions",
+    "cost_impact",
+    "decision_authority",
+    "supersedes_event_id"
+  ],
+  "additionalProperties": false
+}

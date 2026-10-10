@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ducktate/the-librarian/blob/main/schemas/page.schema.json",
+  "title": "page",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "reference",
+        "policy",
+        "procedure",
+        "decision"
+      ]
+    },
+    "domain": {
+      "type": "string",
+      "enum": [
+        "company",
+        "product",
+        "engineering",
+        "infrastructure",
+        "operations",
+        "decisions"
+      ]
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "maintainer": {
+      "type": "string",
+      "enum": [
+        "librarian"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "needs_context",
+        "disputed",
+        "deprecated",
+        "archived"
+      ]
+    },
+    "confidentiality": {
+      "type": "string",
+      "enum": [
+        "internal"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "last_verified": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "verified_scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review_every_days": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "review_trigger": {
+      "type": "string",
+      "minLength": 1
+    },
+    "related_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]+$"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]+$"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "superseded_by": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]+$"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "type",
+    "domain",
+    "owner",
+    "maintainer",
+    "status",
+    "confidentiality",
+    "sources",
+    "last_verified",
+    "verified_scope",
+    "review_every_days",
+    "review_trigger",
+    "related_ids",
+    "supersedes",
+    "superseded_by"
+  ],
+  "additionalProperties": false
+}

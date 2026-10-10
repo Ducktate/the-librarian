@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "event_id": "REPLACE-WITH-UUID",
+  "status": "needs_context",
+  "recorded_at": "REPLACE-WITH-UTC-TIMESTAMP",
+  "actor": "REPLACE",
+  "reason": "REPLACE",
+  "affected_paths": [],
+  "verification_notes": "REPLACE",
+  "follow_up_owner": "REPLACE-WITH-OWNER",
+  "question": "REPLACE",
+  "required_evidence": "REPLACE",
+  "follow_up_on": "REPLACE-WITH-DATE",
+  "related_event_id": null,
+  "published_commit": null
+}

@@ -1,0 +1,15 @@
+# EXAMPLE ONLY: replace paths and choose the host-local time with the operator.
+$brainPath = 'C:\Private\company-brain'
+$pythonPath = 'C:\Path\To\python.exe'
+$taskName = 'CompanyBrainLibrarian'
+if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
+    throw 'A task with this name already exists. Inspect it instead of overwriting it.'
+}
+$action = New-ScheduledTaskAction -Execute $pythonPath -Argument '-m librarian routine' -WorkingDirectory $brainPath
+$trigger = New-ScheduledTaskTrigger -Daily -At '09:00'
+$settings = New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Minutes 35)
+Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings -Description 'Draft-only company brain librarian; see private brain policy.'
+Get-ScheduledTaskInfo -TaskName $taskName
+# Verify host time zone, principal/logon behavior, next run and real execution.
+# Disable: Disable-ScheduledTask -TaskName $taskName
+# Remove only this job if asked: Unregister-ScheduledTask -TaskName $taskName

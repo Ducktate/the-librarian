@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "event_id": "REPLACE-WITH-UUID",
+  "kind": "implementation",
+  "observed_at": "REPLACE-WITH-UTC-TIMESTAMP",
+  "author": {
+    "agent": "REPLACE",
+    "session": "REPLACE",
+    "machine": "REPLACE"
+  },
+  "context": {
+    "repository": null,
+    "commit": null,
+    "issue": null,
+    "pull_request": null
+  },
+  "affected_page_ids": [
+    "REPLACE"
+  ],
+  "claims": [
+    {
+      "text": "REPLACE with scoped observation",
+      "delivery_state": "unknown",
+      "evidence": [
+        "REPLACE with source"
+      ]
+    }
+  ],
+  "sources": [
+    "REPLACE with source"
+  ],
+  "proposed_change": "REPLACE",
+  "questions": [],
+  "cost_impact": null,
+  "decision_authority": null,
+  "supersedes_event_id": null
+}
