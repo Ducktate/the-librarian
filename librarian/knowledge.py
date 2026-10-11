@@ -13,6 +13,7 @@ import re
 import subprocess
 import sys
 import uuid
+from . import contracts
 
 ROOT = Path(__file__).resolve().parent.parent
 FLAGS = {'needs_context', 'disputed', 'authority_required', 'blocked_access'}
@@ -99,7 +100,9 @@ def check_schema(value, schema, label='$'):
 
 
 def schema_errors(root, kind, value):
-    return check_schema(value, read_json(root / 'schemas' / f'{kind}.schema.json'))
+    version = value.get('schema_version') if isinstance(value, dict) else None
+    suffix = '-v2' if kind in {'contribution', 'receipt'} and version == 2 else ''
+    return check_schema(value, read_json(root / 'schemas' / f'{kind}{suffix}.schema.json'))
 
 
 def require_valid(errors):
@@ -123,6 +126,8 @@ def local_ref(root, ref, base=None):
 def page_map(root):
     out = {}
     for path in sorted((root / 'wiki').rglob('*.md')):
+        if not path.resolve().is_relative_to(root.resolve()):
+            raise ValueError('wiki file resolves outside brain root')
         meta, body = parse_page(path)
         require_valid(schema_errors(root, 'page', meta))
         if meta['id'] in out:
@@ -140,6 +145,8 @@ def event_paths(root):
 def events(root):
     out = {}
     for path in event_paths(root):
+        if not path.resolve().is_relative_to(root.resolve()):
+            raise ValueError('event file resolves outside brain root')
         event = read_json(path)
         require_valid(schema_errors(root, 'contribution', event))
         eid = event['event_id']
@@ -160,6 +167,7 @@ def verify_event(root, event, pages=None):
     errors = schema_errors(root, 'contribution', event)
     if errors:
         return errors
+    errors.extend(contracts.event_errors(event))
     pages = pages or page_map(root)
     for pid in event['affected_page_ids']:
         if pid not in pages:
@@ -182,7 +190,14 @@ def verify_event(root, event, pages=None):
 
 
 def history(root, eid):
-    return [read_json(p) for p in sorted((root / 'receipts' / eid).glob('*.json'))]
+    if not re.fullmatch(r'[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}', eid):
+        raise ValueError('invalid event ID')
+    result = []
+    for path in sorted((root / 'receipts' / eid).glob('*.json')):
+        if not path.resolve().is_relative_to(root.resolve()):
+            raise ValueError('receipt file resolves outside brain root')
+        result.append(read_json(path))
+    return result
 
 
 def receipt_errors(root, receipt, previous, event_set):
@@ -192,6 +207,8 @@ def receipt_errors(root, receipt, previous, event_set):
     state = receipt['status']
     if receipt['event_id'] not in event_set:
         errors.append('receipt refers to missing event')
+    else:
+        errors.extend(contracts.receipt_errors(receipt, previous, event_set[receipt['event_id']]))
     if receipt['sequence'] != len(previous) + 1:
         errors.append('receipt sequence must be contiguous')
     if previous and previous[-1]['status'] in TERMINAL:
@@ -283,6 +300,8 @@ def validate(root, base=None):
     previous_by_event = {}
     for path in sorted((root / 'receipts').rglob('*.json')):
         try:
+            if not path.resolve().is_relative_to(root.resolve()):
+                raise ValueError('receipt file resolves outside brain root')
             receipt = read_json(path)
             require_valid(schema_errors(root, 'receipt', receipt))
             eid = receipt['event_id']
@@ -339,6 +358,7 @@ def write_lock(root):
 
 
 def submit(root, event):
+    contracts.mutation_guard(root)
     with write_lock(root):
         return _submit(root, event)
 
@@ -356,10 +376,13 @@ def _submit(root, event):
     if related and related not in existing:
         raise ValueError('superseded event does not exist')
     path = event_destination(root, event)
+    if not path.resolve().is_relative_to(root.resolve()):
+        raise ValueError('event destination resolves outside brain root')
     return path, store_immutable(path, event)
 
 
 def append_receipt(root, receipt):
+    contracts.mutation_guard(root)
     with write_lock(root):
         return _append_receipt(root, receipt)
 
@@ -371,12 +394,20 @@ def _append_receipt(root, receipt):
     if not re.fullmatch(r'[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}', eid):
         raise ValueError('invalid event ID')
     previous = history(root, eid)
+    # An explicit sequence identifies an exact immutable historical retry.
+    if 'sequence' in receipt and isinstance(receipt['sequence'], int) and 1 <= receipt['sequence'] <= len(previous):
+        old = previous[receipt['sequence'] - 1]
+        if old == receipt:
+            return root / 'receipts' / eid / f'{receipt["sequence"]:04d}.json', 'unchanged'
+        raise ValueError('immutable receipt conflict: sequence already exists')
     # Retry a semantically identical last record without creating a new sequence.
-    if previous and {k:v for k,v in previous[-1].items() if k != 'sequence'} == {k:v for k,v in receipt.items() if k != 'sequence'}:
+    if previous and 'sequence' not in receipt and {k:v for k,v in previous[-1].items() if k != 'sequence'} == {k:v for k,v in receipt.items() if k != 'sequence'}:
         return root / 'receipts' / eid / f'{len(previous):04d}.json', 'unchanged'
-    receipt['sequence'] = len(previous) + 1
+    receipt.setdefault('sequence', len(previous) + 1)
     require_valid(receipt_errors(root, receipt, previous, events(root)))
     path = root / 'receipts' / eid / f'{receipt["sequence"]:04d}.json'
+    if not path.resolve().is_relative_to(root.resolve()):
+        raise ValueError('receipt destination resolves outside brain root')
     return path, store_immutable(path, receipt)
 
 
@@ -433,7 +464,18 @@ def main(argv=None):
             print(json.dumps(search(root, args.query), indent=2))
         else:
             op = submit if args.command == 'submit' else append_receipt
-            path, status = op(root, read_json(args.file))
+            value = read_json(args.file)
+            if value.get('schema_version') != 2:
+                if args.command == 'submit':
+                    exact_retry = events(root).get(value.get('event_id')) == value
+                else:
+                    exact_retry = value in history(root, value.get('event_id', ''))
+                    if 'sequence' not in value:
+                        exact_retry = any({key: item for key, item in old.items() if key != 'sequence'} == value
+                                          for old in history(root, value.get('event_id', '')))
+                if not exact_retry:
+                    raise ValueError('new CLI records require schema_version 2; v1 is historical read/exact-retry only')
+            path, status = op(root, value)
             print(f'{status}: {path.relative_to(root)} (local only)')
         return 0
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as e:

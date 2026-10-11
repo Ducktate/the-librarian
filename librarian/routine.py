@@ -59,6 +59,7 @@ def run_routine(root, dry_run=False, force=False):
         return 0
     if cfg.get('mode') != 'company' or cfg.get('owner') == 'unassigned':
         raise ValueError('Configure your private company copy before running a librarian.')
+    knowledge.contracts.mutation_guard(root)
     if not queue and not stale and not force:
         print('No pending events or overdue pages; no agent invocation.')
         return 0

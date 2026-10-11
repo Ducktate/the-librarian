@@ -1,16 +1,24 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "event_id": "REPLACE-WITH-UUID",
   "status": "needs_context",
-  "recorded_at": "REPLACE-WITH-UTC-TIMESTAMP",
-  "actor": "REPLACE",
-  "reason": "REPLACE",
+  "recorded_at": null,
+  "actor": null,
+  "reason": null,
   "affected_paths": [],
-  "verification_notes": "REPLACE",
-  "follow_up_owner": "REPLACE-WITH-OWNER",
-  "question": "REPLACE",
-  "required_evidence": "REPLACE",
-  "follow_up_on": "REPLACE-WITH-DATE",
+  "verification_notes": null,
+  "follow_up_owner": null,
+  "question": null,
+  "required_evidence": null,
+  "follow_up_on": null,
   "related_event_id": null,
-  "published_commit": null
+  "published_commit": null,
+  "draft": true,
+  "operator": {
+    "agent": null,
+    "session": null,
+    "machine": null
+  },
+  "run_id": "22222222-2222-4222-8222-222222222222",
+  "sequence": null
 }

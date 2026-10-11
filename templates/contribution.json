@@ -1,37 +1,49 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "event_id": "REPLACE-WITH-UUID",
   "kind": "implementation",
-  "observed_at": "REPLACE-WITH-UTC-TIMESTAMP",
+  "observed_at": null,
   "author": {
-    "agent": "REPLACE",
-    "session": "REPLACE",
-    "machine": "REPLACE"
+    "agent": null,
+    "session": null,
+    "machine": null
   },
   "context": {
     "repository": null,
     "commit": null,
     "issue": null,
-    "pull_request": null
+    "pull_request": null,
+    "base_revision": null,
+    "change_revision": null
   },
   "affected_page_ids": [
-    "REPLACE"
+    "company-overview"
   ],
-  "claims": [
-    {
-      "text": "REPLACE with scoped observation",
-      "delivery_state": "unknown",
-      "evidence": [
-        "REPLACE with source"
-      ]
-    }
-  ],
-  "sources": [
-    "REPLACE with source"
-  ],
-  "proposed_change": "REPLACE",
+  "claims": [],
+  "sources": [],
+  "proposed_change": null,
   "questions": [],
   "cost_impact": null,
   "decision_authority": null,
-  "supersedes_event_id": null
+  "supersedes_event_id": null,
+  "draft": true,
+  "summary": {
+    "headline": null,
+    "why": null,
+    "impact": null
+  },
+  "changes": [],
+  "verification": {
+    "result": "not_run",
+    "evidence": []
+  },
+  "delivery": {
+    "state": "unknown",
+    "evidence": []
+  },
+  "decision": {
+    "state": "none",
+    "authority": null,
+    "evidence": []
+  }
 }

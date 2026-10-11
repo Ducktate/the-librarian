@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "event_id": "11111111-1111-4111-8111-111111111111",
+  "kind": "implementation",
+  "observed_at": "2026-01-01T12:00:00Z",
+  "author": {
+    "agent": "example-agent",
+    "session": "fictional-session",
+    "machine": "example-host"
+  },
+  "context": {
+    "repository": null,
+    "commit": null,
+    "issue": null,
+    "pull_request": null
+  },
+  "affected_page_ids": [
+    "company-overview"
+  ],
+  "claims": [
+    {
+      "text": "FICTIONAL: export code exists; live release is unverified.",
+      "delivery_state": "implemented",
+      "evidence": [
+        "examples/evidence.md"
+      ]
+    }
+  ],
+  "sources": [
+    "examples/evidence.md"
+  ],
+  "proposed_change": "Record implemented scope and ask for deployment evidence before claiming availability.",
+  "questions": [
+    "Which release includes this code and where is its acceptance result?"
+  ],
+  "cost_impact": null,
+  "decision_authority": null,
+  "supersedes_event_id": null
+}
