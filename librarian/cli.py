@@ -193,7 +193,7 @@ def health(root):
 
 def daily(root, day, zone, as_of):
     try:
-        tz = ZoneInfo(zone)
+        tz = timezone.utc if zone == 'UTC' else ZoneInfo(zone)
     except ZoneInfoNotFoundError:
         raise ValueError('IANA timezone unavailable; install system timezone data (Windows may require tzdata)') from None
     target = date.fromisoformat(day)

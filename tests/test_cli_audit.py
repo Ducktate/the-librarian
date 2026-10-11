@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 import uuid
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -91,6 +92,14 @@ class CliAudit(unittest.TestCase):
         for bounds in (('--offset', -1), ('--limit', 0), ('--limit', 1001)):
             with self.subTest(bounds=bounds):
                 self.invoke('query', 'company', *bounds, status=2)
+
+    def test_utc_reports_need_no_external_timezone_data(self):
+        with patch('librarian.cli.ZoneInfo', side_effect=ZoneInfoNotFoundError):
+            report = self.invoke('report', 'daily', '--date', '2030-04-12',
+                                 '--timezone', 'UTC', '--as-of', '2030-04-13T00:00:00Z')['data']
+            self.assertEqual(report['window']['start_utc'], '2030-04-12T00:00:00+00:00')
+            self.invoke('report', 'daily', '--date', '2030-04-12',
+                        '--timezone', 'America/New_York', status=2)
 
     def test_read_uses_exact_ids_and_pages_body_without_losing_file_hash(self):
         page = self.root / 'wiki/company/overview.md'

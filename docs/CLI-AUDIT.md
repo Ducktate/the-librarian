@@ -135,7 +135,8 @@ python -m librarian report daily --date 2030-04-12 --timezone UTC --as-of 2030-0
 
 Dates are fictional. --date is the chosen local calendar date; --timezone is an IANA name.
 The local-midnight window is converted to UTC and end-exclusive, respecting timezone data.
-Windows may need installed timezone data (the CLI uses standard-library zoneinfo).
+UTC works without an external timezone database. Other IANA zones use standard-library
+zoneinfo; Windows may need installed timezone data for those zones.
 --as-of is an explicit timestamp with offset; if omitted it uses the current UTC time.
 Supply it for reproducible reporting. --format is json or markdown; --output writes a new
 file. Otherwise JSON/Markdown is printed. Reports do not overwrite files or record history.
