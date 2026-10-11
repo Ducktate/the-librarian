@@ -1,15 +1,33 @@
 # Start here
 
-This repository has two modes: an unconfigured public template and your configured private company brain. Read README.md, prompts/SETUP.md and docs/OPERATING-POLICY.md. Check librarian.json to know which mode you are in. Do not infer a running service from the presence of a configuration file.
+Check librarian.json: this is either an unconfigured public template or your configured
+private brain. Read prompts/SETUP.md, docs/OPERATING-POLICY.md and docs/CLI-AUDIT.md.
+Starter pages are unverified. A configuration file does not prove an installed service.
 
 ## Setup order
 
-1. Identify the authorized destination, company owner, source repositories/documents, agent access, cadence/time zone and approval policy. Reuse answers already supplied. Ask only for missing decisions.
-2. Create a private copy with its own origin. Preserve existing files, agent rules and schedules. Do not populate or push company data to Ducktate/the-librarian.
-3. Configure company identity. Inventory accessible sources and create scoped pages from evidence. Record missing access, conflicting facts and unknown owners as flags. Never guess business facts.
-4. Review and adopt the operating policy with the accountable owner. Default recurring work to draft-only with human-reviewed publication. Record narrower delegated authority explicitly if the owner grants it.
-5. Connect every requested agent through a verified reader and contribution path. Install short bootstrap instructions in the applicable project instruction files through their normal editing process. Test a fresh agent session.
-6. Configure one actual recurring librarian job following docs/SCHEDULING.md. Prefer the user's existing scheduler/native agent routine. Record its ID, time zone, cadence, workspace, runner and next run. Prevent duplicate or overlapping jobs.
-7. Execute the acceptance checklist. Report implemented, read-ready, contribute-ready and scheduled/verified states separately. If any dependency is absent, keep a precise blocker and complete independent work.
+1. Reuse authorized context. Resolve missing private destination, company/owner, sources,
+   reader agents, schedule time/time zone and notification destination/preferences.
+2. Create the private copy with its own origin. Preserve existing files, instructions,
+   ownership and schedules. Keep all company data out of Ducktate/the-librarian.
+3. Configure identity, inventory accessible sources and populate scoped pages from evidence.
+   Flag access gaps, unknowns and conflicts with exact questions and accountable owners.
+4. Adopt policy and decision authority with the responsible owner. Keep recurring work
+   draft-only unless explicit scoped publication is delegated. Choose human review checks.
+5. Connect each requested agent through verified access and actual project instructions.
+   Test bounded fresh-session reading and a completed v2 contribution. Record local versus
+   shared persistence; a link or copied instruction file is not connection evidence.
+6. Configure one actual job through docs/SCHEDULING.md and prompts/SCHEDULE-SETUP.md.
+   Verify job ID, cadence, time zone, next timestamp/offset, DST behavior, deduplication,
+   cross-host concurrency, notifications and disable steps.
+7. Complete docs/ACCEPTANCE.md with a real manual run and first scheduled execution.
+   Generate one report artifact with explicit date/time zone/as-of scope; distribute its
+   extracted executive summary separately and retain the detailed audit privately.
 
-After setup, every working agent reads wiki/index.md and docs/AGENT-PROCEDURE.md. An assigned librarian also reads docs/LIBRARIAN-PROCEDURE.md and prompts/LIBRARIAN-RUN.md.
+Report template/configured, read-ready, contribute-ready, scheduled-awaiting-first-run and
+verified checkpoints separately. Missing dependencies remain precise blockers; complete
+independent work. Do not infer comprehensive feature documentation or release readiness.
+
+Working agents read wiki/index.md and docs/AGENT-PROCEDURE.md. Librarians also read
+docs/LIBRARIAN-PROCEDURE.md and prompts/LIBRARIAN-RUN.md. Use an actual configured backend
+for role routing; preserve the main/voice runtime and never claim switches from prompt text.

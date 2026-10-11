@@ -33,5 +33,6 @@ This is the entrypoint for Your Company. This unconfigured template contains no 
 | Agent and recurring-job readiness | [Automation register](operations/automation.md) |
 | Reading and updates | [Agent procedure](../docs/AGENT-PROCEDURE.md) |
 | Filing and questions | [Librarian procedure](../docs/LIBRARIAN-PROCEDURE.md) |
+| Commands, records and executive/audit reporting | [CLI and audit contracts](../docs/CLI-AUDIT.md) |
 
-Run `python -m librarian queue` for unresolved events and receipts. Search is a route to evidence, not proof. Record the brain commit and freshness at task start. Submit material changes through your own contribution branch; report persistence at handoff.
+Use bounded `python -m librarian query`, `read` and `map` before original evidence. Run `audit` for event/receipt history and `health` for recorded gaps and readiness limits. Retrieval is a route to evidence, not proof. Record the brain commit and freshness at task start. Submit material v2 changes through your own contribution branch; report persistence at handoff. This draft index does not establish complete company coverage.

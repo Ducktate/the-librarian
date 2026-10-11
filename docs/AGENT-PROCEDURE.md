@@ -2,27 +2,51 @@
 
 ## Read before work
 
-1. Read the application's applicable instructions and respect checkout ownership. Locate the configured private brain through your verified clone/connector.
-2. Record the brain branch, commit and retrieval time. Fast-forward only a clean owned reader clone. Label offline/old copies; never reset another agent's work.
-3. Read wiki/index.md, then relevant domain pages. Check status, owner, dates, scope and original sources. Search returns routes to evidence, not authority. Start small; expand for the actual question.
-4. Check current work, decisions and flags for conflicts. Use source-repo contracts for code behavior. If access is unavailable, report the limit and continue only work independent of missing facts.
+1. Respect application instructions and checkout ownership. Locate the configured private
+   brain through a verified clone/connector. Record its branch, commit and retrieval time.
+2. Fast-forward only a clean owned reader clone. Label stale/offline copies; preserve others.
+3. Read wiki/index.md. Query with a small result limit, read bounded sections by page ID,
+   use map for relationships, then inspect original sources. Expand for the actual question.
+4. Check status, owner, dates, scope, decisions and unresolved flags. Source-code contracts
+   remain authoritative for behavior. If access is missing, state the limit.
 
-## Submit an update
+Use docs/CLI-AUDIT.md for commands. Search routes to evidence, never authority. A cached
+brain does not prove current deployment or source access.
 
-Submit at a meaningful milestone, handoff or session close when another agent's understanding should change. Do not submit every thought or routine formatting edit.
+## Submit a material update
 
-1. Create an owned contribution branch in the private brain. Copy templates/contribution.json to a temporary file and fill it. Generate a UUID with `python -c "import uuid; print(uuid.uuid4())"`.
-2. Include actual agent/session/machine, observed_at with time zone, repository/commit/ticket/PR, affected page IDs, scoped claims, delivery state, source references, proposed change, missing questions, cost impact and decision authority when relevant. For a proposed new page, target brain-index and describe the page; the librarian assigns its stable ID.
-3. Run `python -m librarian submit /path/to/event.json`. The UTC observed_at month selects inbox/YYYY/MM/UUID.json. Exact retries are idempotent; changed content under the same ID is rejected. Corrections use a new ID and supersedes_event_id.
-4. Review/redact, commit and share through the private repository using existing authorization. Local submission is not a shared receipt. Report local, pushed or merged state accurately.
-5. Respond to a librarian question with a new resolving event and original-event reference. Do not edit the original event or receipt.
+Use prompts/CONTRIBUTOR-HANDOFF.md at meaningful milestones or session close. Do not create
+an event for every thought or formatting edit.
 
-At closeout, name event IDs and persistence state or say `No material company fact changed.` Do not rewrite the wiki as a contributor. Keep raw secrets/customer material out of the outbox as well as Git. Offline events can stay in an ignored local outbox until safe to submit.
+1. Work in an owned contribution branch in the private brain. Use update draft and complete
+   the v2 record; generated drafts intentionally require real evidence and attribution.
+2. Record what changed and why, repository/module, exact paths, before/after behavior and
+   evidence per path; actual author/session/machine/time; base/change revisions, commits
+   and PRs if present; verification result/evidence; delivery state/evidence; decision
+   state/authority/evidence. Null/unavailable facts stay explicit, never fabricated.
+3. Use update lint and update submit with --source-checkout for code changes. Source checks
+   are scoped to that checkout; they do not establish deployment or complete coverage.
+4. Exact retries retain the same content/ID. Changed content needs a new event and
+   supersedes_event_id. Preserve v1 history; do not create new v1 events.
+5. Redact, commit and share through existing private-repository authorization. Report local,
+   pushed or merged state accurately. Local submission is not shared intake.
+6. Respond to a flag with a new resolving event linked to the original; preserve records.
 
-## Bootstrap each agent
+At handoff give event IDs, persistence, source revisions/PR, verification limits and exact
+pending owner questions, or say `No material company fact changed.` Do not rewrite shared
+wiki facts as a contributor. Keep secrets/customer material out of local outboxes too.
 
-Insert this short instruction in each requested agent's actual project instructions, preserving existing rules:
+## Bootstrap each requested agent
 
-> Before company work, explicitly read BRAIN_PATH/wiki/index.md and BRAIN_PATH/docs/AGENT-PROCEDURE.md, then relevant pages and their sources. Record brain revision/freshness. Submit material updates as immutable events; report their persistence state. Do not rewrite company facts directly as a contributor. If the brain is unavailable, say so. Source-repo contracts and ownership still apply.
+Insert a short instruction into its actual project instruction mechanism while preserving
+existing rules:
 
-Replace BRAIN_PATH with a real accessible path or authorized connector/repository reference. A link is not proof it was loaded. A remote agent may not see your local disk. Test a fresh session with one known fact and one disposable local contribution before marking that reader ready. Record access in wiki/operations/automation.md without credentials.
+> Before company work, read BRAIN_REFERENCE/wiki/index.md and
+> BRAIN_REFERENCE/docs/AGENT-PROCEDURE.md, then bounded relevant pages and original evidence.
+> Record brain revision/freshness. Submit material v2 updates with actual session, exact
+> paths, revisions and verification; report persistence. If unavailable, say so.
+> Source-repository contracts and checkout ownership still apply.
+
+Replace BRAIN_REFERENCE with verified accessible clone/connector access. A remote agent may
+not see local disk. Test a fresh session with a known fact and a disposable contribution,
+then record access/readiness in wiki/operations/automation.md without credentials.

@@ -8,6 +8,7 @@ import subprocess
 import sys
 
 from . import knowledge
+from . import contracts
 from .routine import run_routine
 
 
@@ -20,11 +21,7 @@ def configure(root, company, owner):
         raise ValueError('Company must be a nonempty single line, at most 120 characters.')
     if owner == 'unassigned' or not re.fullmatch(r'[a-z][a-z0-9-]+', owner):
         raise ValueError('Owner must be an accountable lowercase identity, such as company-owner.')
-    remotes = subprocess.run(['git', 'remote', '-v'], cwd=root, capture_output=True, text=True, timeout=10)
-    # Refuse any upstream push remote, even if it was named something other than origin.
-    for line in remotes.stdout.lower().splitlines():
-        if '(push)' in line and re.search(r'github\.com[:/]ducktate/the-librarian(?:\.git)?(?:\s|$)', line):
-            raise ValueError('Public upstream is still a push remote. Create your private copy and replace/remove that remote first.')
+    contracts.mutation_guard(root)
     knowledge.require_valid(knowledge.validate(root))
     changes = []
     for _, (path, meta, body) in knowledge.page_map(root).items():
@@ -46,12 +43,27 @@ def configure(root, company, owner):
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
-    if not argv or argv[0] not in {'configure', 'routine'}:
+    from . import cli
+    if argv in (['--help'], ['-h']):
+        cli.parser().print_help()
+        return 0
+    try:
+        normalized = cli.normalize_root(argv)
+    except ValueError:
+        return cli.main(argv)
+    command_args = normalized[2:] if normalized[:1] == ['--root'] else (normalized[1:] if normalized and normalized[0].startswith('--root=') else normalized)
+    command = command_args[0] if command_args else None
+    if command in {'query', 'read', 'map', 'update', 'audit', 'lint', 'health', 'report'} or (command == 'receipt' and len(command_args) > 1 and command_args[1] in {'draft', 'record'}):
+        return cli.main(argv)
+    argv = normalized
+    if command in {'validate', 'queue', 'search', 'submit', 'receipt'}:
         return knowledge.main(argv)
+    if command not in {'configure', 'routine'}:
+        return cli.main(argv)
     parser = argparse.ArgumentParser()
     parser.add_argument('command', choices=['configure', 'routine'])
     parser.add_argument('--root', type=Path, default=knowledge.ROOT)
-    if argv[0] == 'configure':
+    if command == 'configure':
         parser.add_argument('--company', required=True)
         parser.add_argument('--owner', required=True)
     else:

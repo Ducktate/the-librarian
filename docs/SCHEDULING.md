@@ -1,18 +1,35 @@
 # Set up the recurring librarian
 
-The goal is one real recurring agent run with evidence of its schedule and operation. A prompt file or cron example alone is not a running librarian. Prefer the user's existing agent routine/automation scheduler when available. Otherwise use their OS scheduler with the local wrapper below.
+One real recurring agent run needs an installed runtime and scheduler, verified access,
+and observed execution. A prompt, copied config or scheduler example is not a running job.
+Use prompts/SCHEDULE-SETUP.md with the user's existing preferences.
 
-## Decide once, then configure
+## Choose and verify the schedule
 
-Use existing user preferences. Resolve only missing company path, designated host/agent, source access, time zone, cadence, runtime and publication authority. Recommend one daily draft-only run plus the user's ordinary review cadence; do not silently assume a time zone. Use a private owned worktree and restrict the runner to needed resources. Keep credentials in the user's existing secret store.
+Resolve only missing private path, designated host/runtime, cadence, local time, named time
+zone, publication authority and notification destination/preferences. Recommend one daily
+draft-only run; do not hardcode the user's time zone or backend. Daily executive summaries
+are opt-in. Otherwise notify meaningful changes, failures and required decisions only.
 
-For native agent routines, schedule prompts/LIBRARIAN-RUN.md as instructions with the absolute private brain path. Configure single-run concurrency, a bounded runtime, failure visibility and no notifications for unchanged state unless requested. Verify native task ID, cadence/time zone and next-run timestamp. Do not install an OS cron as a hidden replacement for an unavailable native routine.
+Inspect existing jobs and capabilities before configuring. Deduplicate by workspace and
+purpose, preserve other jobs and establish single-run concurrency. Use a private owned
+worktree, bounded runtime and least necessary source access. Keep credentials in the existing
+secret store. Per-clone locks do not exclude other clones/hosts; designate one host or use
+scheduler-level coordination.
+
+For native routines, schedule prompts/LIBRARIAN-RUN.md with the actual private path. Verify
+supported controls rather than guessing. Do not silently replace a requested native routine
+with an OS job. Use actual runtime-supported background roles/controls; preserve the
+main/voice model. Prompt wording cannot select a model; record resolved metadata if exposed.
 
 ## Local wrapper
 
-The alternative `python -m librarian routine` validates the brain, detects pending/flagged events and overdue pages, acquires a per-clone lock, and invokes the configured agent command with an on-disk run prompt. It does not contain a model, Git credentials, automatic merge or a scheduler installer.
+`python -m librarian routine` validates the brain, detects pending/flagged records and
+overdue pages, locks one clone and invokes the configured agent with an on-disk prompt.
+It contains no model, Git credentials, automatic merge or scheduler installer.
 
-Edit the runner section of librarian.json in your private copy. `command` is an argument array, never a shell string. One argument must contain `{prompt_file}`; `{root}` may appear in any argument. Use an adapter for your installed agent that reads the prompt file and executes a bounded agent turn. Verify the actual runtime's supported command/authentication/approval behavior from its installed help or official docs. Do not guess flags or add bypass-permission options. Credentials must not appear in the array.
+Set librarian.json runner.command to an argument array, never a shell string. One argument
+must contain {prompt_file}; {root} can appear in arguments. Use a real installed adapter:
 
 ```json
 {
@@ -21,16 +38,45 @@ Edit the runner section of librarian.json in your private copy. `command` is an 
 }
 ```
 
-That path is a placeholder, not a bundled executable. The adapter should honor exit codes and supervise/stop its children on timeout. A mock adapter tests the wrapper only; it does not qualify a real agent.
+This is a placeholder, not a bundled executable. Verify actual CLI/authentication/approval
+behavior from installed help or official documentation. Do not guess flags or add permission
+bypasses. The adapter must honor exit codes and supervise children on timeout.
 
-Run `python -m librarian routine --dry-run`. Then run `python -m librarian routine --force` with the real configured runtime and verify its draft/flag result. The routine exits 0 on an empty, non-stale queue; it fails visibly for missing runner, lock contention, validation error, timeout or nonzero runner exit. Failure details and last-run state remain locally under ignored .runtime/. Logs can contain private output and must not be published.
+Run `python -m librarian routine --dry-run`, then a real
+`python -m librarian routine --force` and inspect its draft/flag/receipt outcome.
+A mock adapter tests the wrapper only. The wrapper fails visibly on missing runner, lock
+contention, invalid data, timeout or nonzero exit. Its private logs/last-run state are under
+ignored .runtime/. A zero wrapper exit does not prove reconciliation or publication.
 
-## OS scheduler examples
+Without --force, the wrapper can skip an empty intake with no metadata review due. If the
+user opts into daily reporting, schedule routine --force or a separate report job so the
+daily artifact is generated even then. Generate one JSON/Markdown artifact with executive
+and detailed audit sections; extract the executive summary for separate authorized
+distribution and retain the full audit privately.
 
-Use templates/cron.example or templates/windows-task.ps1.example after replacing absolute paths and selecting the user's schedule. Preserve all existing jobs; never replace an entire crontab. Cron time zones differ by installation: inspect the host time zone and scheduler support, then verify the displayed next run. Windows Task Scheduler uses the host's schedule/time-zone behavior; verify that it matches the chosen time zone, including daylight-saving changes. Use a non-overlapping task policy and an appropriate dedicated account; do not embed passwords.
+## Scheduler and daylight saving time
+
+Use templates/cron.example or templates/windows-task.ps1.example only after substituting
+verified runtime/private paths and the chosen schedule. Preserve existing crontabs/tasks.
+Inspect host and scheduler time-zone support. Verify the next actual run with timestamp,
+zone and UTC offset from scheduler evidence.
+
+Record whether the schedule follows local wall time or fixed UTC, including skipped/repeated
+hours during daylight-saving transitions. Confirm how repeated-hour duplicates and missed
+runs behave; deduplicate/coordinate runs accordingly. Windows and cron semantics depend on
+the installed scheduler/host. Do not claim DST support from a text example.
 
 ## Proof and handoff
 
-Store non-secret scheduler evidence in wiki/operations/automation.md: actual job ID, host/agent, configured path, time zone, cadence, command/reference, next run, last observed scheduled execution and result, publication scope, notification behavior, owner and disable/remove instructions. Update librarian.json schedule status only from this evidence. A manual run and a scheduled run are separate acceptance checks. If the first scheduled execution is later, report scheduled-awaiting-first-run and keep that checkpoint open.
+Store non-secret evidence in wiki/operations/automation.md: actual job ID, designated
+host/agent, private path, cadence/time/zone, command/reference, verified next timestamp/offset,
+DST behavior, concurrency/deduplication, publication scope, notification destination/preference,
+owner and disable/remove steps. Update schedule status only from evidence.
 
-Do not call setup complete until the requested agent has actually read the brain, submitted an update, reconciled or flagged it, and the recurring job has been verified. Missing permissions/runtime access become explicit blockers; continue independent setup work.
+A real manual run and first scheduled execution are separate checks. Record the scheduled
+run's operator/session/run UUID, start/result and resulting receipts/draft. If it is future,
+report scheduled-awaiting-first-run. Do not call verified before observing it. Check failure
+visibility and recovery as well. Generate one report artifact, then distribute the extracted
+executive summary separately if authorized; reports alone do not send notifications.
+Missing access/runtime becomes an explicit blocker while independent
+setup continues.
