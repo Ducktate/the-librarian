@@ -24,3 +24,23 @@ Do not claim scheduler readiness without actual scheduler and first-run evidence
 Use actual supported backend role/runtime controls for bounded background jobs, preserving
 the main/voice model. Narrow inadequate results before at most one tier escalation.
 Record runtime metadata when available; do not fabricate model selection, costs or savings.
+
+## Company Brain (DUC-1088)
+
+The company brain is the private repo `Ducktate/ducktate-brain`, the only home for company facts.
+Its one current agent prompt, for Claude, Codex and every other agent, is
+`content/REPOSITORY-RULES.md`:
+https://github.com/Ducktate/ducktate-brain/blob/main/content/REPOSITORY-RULES.md
+
+1. Before work, read that prompt and follow it. Record its version line.
+2. Claude sessions with the brain hook see it injected at start. Otherwise open it in the brain
+   clone, `<workspace>/ducktate-brain` (`~/Ducktate` on a Mac, `C:\Ducktate` on Windows), or on
+   GitHub main.
+3. If you cannot read it, say so. Do not work from an older copy of these rules.
+4. Never edit the brain from this repo, and never put secrets, keys, customer content, or
+   transcripts in it.
+5. After work, write to the brain log only, following `content/REPOSITORY-RULES.md` (source of
+   truth). If the task changed a company fact, from your own git worktree of the brain clone run
+   `python3 brain.py update draft`, fill every field, then `update lint` and `update submit`.
+   Commit only the new inbox JSON, push, open an intake PR to `Ducktate/ducktate-brain`, never
+   merge it, and report the event id. If nothing changed, say `No material company fact changed.`
